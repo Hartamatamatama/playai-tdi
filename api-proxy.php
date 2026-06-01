@@ -19,16 +19,19 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-// API key (hidden server-side) - Ganti dengan API key Anda sendiri dari https://openrouter.ai/settings/keys
-$api_key = "API_KEY_DISEMBUNYIKAN_UNTUK_KEAMANAN";
+// Panggil file konfigurasi rahasia
+require_once 'config.php';
+
+// Ambil kuncinya (Disamakan menggunakan huruf K besar)
+$apiKey = OPENROUTER_API_KEY;
 
 // Get the request body from client
 $input = file_get_contents('php://input');
-$data = json_decode($input, true);
 
-if (!$data) {
+// Validasi apakah input benar-benar JSON yang valid
+if (empty($input) || !json_decode($input)) {
     http_response_code(400);
-    echo json_encode(['error' => 'Invalid JSON']);
+    echo json_encode(['error' => 'Invalid JSON payload']);
     exit();
 }
 
@@ -41,11 +44,11 @@ $ch = curl_init($url);
 curl_setopt_array($ch, [
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_POST => true,
-    CURLOPT_POSTFIELDS => json_encode($data),
+    CURLOPT_POSTFIELDS => $input, // Langsung kirim raw JSON
     CURLOPT_HTTPHEADER => [
         'Content-Type: application/json',
-        'Authorization: Bearer ' . $apiKey,
-        'HTTP-Referer: local-anime-rpg',
+        'Authorization: Bearer ' . $apiKey, // Variabel sekarang sudah cocok
+        'HTTP-Referer: http://playai.my.id', // Gunakan domain aslimu
         'X-Title: Anime RPG Adventure'
     ],
     CURLOPT_TIMEOUT => 240, // 4 minutes timeout
