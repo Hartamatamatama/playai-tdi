@@ -1,3 +1,11 @@
+<?php
+session_start();
+// Jika user belum login, paksa tendang kembali ke halaman utama
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
 
@@ -6,12 +14,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PlayAI | Sticker Studio</title>
 
-    <!-- React & Babel CDNs -->
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Righteous&family=DM+Sans:wght@400;500;700&display=swap"
         rel="stylesheet">
 
@@ -41,7 +47,8 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
+            /* Ubah agar halaman bisa di-scroll ke bawah untuk galeri */
             background-image:
                 linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
@@ -50,7 +57,6 @@
             position: relative;
         }
 
-        /* Ambient Glow */
         body::after {
             content: '';
             position: fixed;
@@ -86,7 +92,7 @@
         #root {
             width: 100%;
             max-width: 1200px;
-            padding: 4rem 2rem 2rem;
+            padding: 4rem 2rem 4rem;
             animation: fadeInScreen 0.6s ease-out;
         }
 
@@ -300,6 +306,63 @@
             font-size: 1.1rem;
         }
 
+        /* === GALLERY SECTION === */
+        .gallery-section {
+            margin-top: 5rem;
+            width: 100%;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .gallery-title {
+            font-family: 'Righteous', cursive;
+            font-size: 2.5rem;
+            color: #fff;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--card-border);
+            padding-bottom: 1rem;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1rem;
+            transition: transform 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .gallery-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--tertiary);
+            box-shadow: 0 10px 20px rgba(163, 133, 255, 0.15);
+        }
+
+        .gallery-img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.4));
+        }
+
+        .gallery-prompt {
+            font-size: 0.85rem;
+            color: #a0a5bc;
+            text-align: center;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
         /* === ANIMATIONS === */
         @keyframes fadeInScreen {
             from {
@@ -354,17 +417,21 @@
 </head>
 
 <body>
-    <a href="index.html" class="back-to-hub">← Kembali ke Hub</a>
+    <a href="index.php" class="back-to-hub">← Kembali ke Hub</a>
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState } = React;
+        const { useState, useEffect } = React;
 
         function App() {
             const [prompt, setPrompt] = useState('');
             const [style, setStyle] = useState('cartoon');
             const [loading, setLoading] = useState(false);
             const [imageSrc, setImageSrc] = useState(null);
+            
+            // State untuk Galeri Database
+            const [gallery, setGallery] = useState([]);
+            const [loadingGallery, setLoadingGallery] = useState(true);
 
             const styles = [
                 { id: 'cartoon', icon: '🎨', label: 'Cartoon' },
@@ -375,12 +442,42 @@
                 { id: 'neon', icon: '💡', label: 'Neon Glow' }
             ];
 
+            // Fungsi mengambil data dari database saat halaman pertama kali dibuka
+            const fetchGallery = async () => {
+                setLoadingGallery(true);
+                try {
+                    const res = await fetch('load_stickers.php');
+                    const data = await res.json();
+                    if (data.status === 'success') {
+                        setGallery(data.data);
+                    }
+                } catch (err) {
+                    console.error('Gagal memuat galeri', err);
+                } finally {
+                    setLoadingGallery(false);
+                }
+            };
+
+            // React Lifecycle: Panggil API load_stickers saat komponen mount
+            useEffect(() => {
+                fetchGallery();
+            }, []);
+
+            // Helper: Mengubah file gambar mentah (Blob) menjadi format Teks Base64 agar bisa masuk Database
+            const blobToBase64 = (blob) => {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(blob);
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.onerror = reject;
+                });
+            };
+
             const generateImage = async () => {
                 if (!prompt) return;
                 setLoading(true);
                 setImageSrc(null);
 
-                // Prompts khusus untuk mengarahkan AI FLUX
                 const stylePrompts = {
                     cartoon: 'vibrant vector cartoon sticker, bold outlines, flat colors, white border',
                     '3d': 'cute 3d isometric sticker, claymorphism style, glossy, white border',
@@ -393,6 +490,7 @@
                 const fullPrompt = `${prompt}, ${stylePrompts[style]}, isolated on solid white background, die-cut style, high resolution`;
 
                 try {
+                    // API Call ke generator gambar (proxy.php lokalmu)
                     const response = await fetch('./proxy.php', {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -405,7 +503,31 @@
                     }
 
                     const blob = await response.blob();
-                    setImageSrc(URL.createObjectURL(blob));
+                    
+                    // Tampilkan gambar langsung ke layar user
+                    const localUrl = URL.createObjectURL(blob);
+                    setImageSrc(localUrl);
+
+                    // --- PROSES AUTO SAVE KE DATABASE ---
+                    try {
+                        const base64Data = await blobToBase64(blob);
+                        const saveRes = await fetch('save_sticker.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                prompt: prompt,
+                                image_url: base64Data
+                            })
+                        });
+                        const saveResult = await saveRes.json();
+                        
+                        if (saveResult.status === 'success') {
+                            fetchGallery(); // Refresh otomatis galeri di bawah jika berhasil simpan
+                        }
+                    } catch (saveErr) {
+                        console.error("Gagal melakukan auto-save ke MySQL:", saveErr);
+                    }
+
                 } catch (error) {
                     alert("Info: " + error.message);
                 } finally {
@@ -489,6 +611,26 @@
                                 </div>
                             )}
                         </div>
+                    </div>
+
+                    {/* GALERI KOLEKSI PRIBADI (Terhubung dengan Database) */}
+                    <div className="gallery-section">
+                        <h2 className="gallery-title">🎨 Galeri Koleksimu</h2>
+                        
+                        {loadingGallery ? (
+                            <p style={{textAlign: 'center', color: '#a0a5bc'}}>Memuat koleksi dari brankas data...</p>
+                        ) : gallery.length > 0 ? (
+                            <div className="gallery-grid">
+                                {gallery.map((item, index) => (
+                                    <div key={index} className="gallery-card">
+                                        <img src={item.image_url} alt={item.prompt} className="gallery-img" />
+                                        <p className="gallery-prompt" title={item.prompt}>{item.prompt}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <p style={{textAlign: 'center', color: '#6a718f'}}>Kamu belum membuat stiker apapun. Yuk mulai imajinasimu!</p>
+                        )}
                     </div>
                 </div>
             );

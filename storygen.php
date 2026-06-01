@@ -1,3 +1,11 @@
+<?php
+session_start();
+// Jika user belum login, paksa tendang kembali ke halaman utama
+if (!isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
 
@@ -43,7 +51,6 @@
             position: relative;
         }
 
-        /* Ambient Glow */
         body::before {
             content: '';
             position: fixed;
@@ -134,7 +141,7 @@
             line-height: 1.5;
         }
 
-        /* Icon Wrapper untuk Mencegah Bug Transform CSS */
+        /* Icon Wrapper */
         .icon-wrapper {
             height: 80px;
             display: flex;
@@ -143,13 +150,12 @@
             margin-bottom: 1rem;
         }
 
-        /* === PIXEL SPRITES KELAS DASAR === */
+        /* === PIXEL SPRITES === */
         .pixel-sprite {
             width: 1px;
             height: 1px;
             position: relative;
             transform: scale(7) translate(-5px, -5px);
-            /* Skala Disesuaikan */
             transition: transform 0.3s ease;
         }
 
@@ -157,7 +163,7 @@
             transform: scale(8) translate(-5px, -5px);
         }
 
-        /* KOORDINAT PIXEL ART ASLI (TIDAK DIUBAH) */
+        /* KOORDINAT PIXEL ART */
         .naruto-sprite {
             box-shadow: 6px 0px 0 1px #FFD700, 7px 0px 0 1px #FFD700, 8px 0px 0 1px #FFD700, 9px 0px 0 1px #FFD700, 5px 1px 0 1px #FFD700, 6px 1px 0 1px #FFD700, 7px 1px 0 1px #FFD700, 8px 1px 0 1px #FFD700, 9px 1px 0 1px #FFD700, 10px 1px 0 1px #FFD700, 5px 2px 0 1px #FFD700, 6px 2px 0 1px #FFD700, 7px 2px 0 1px #FFD700, 8px 2px 0 1px #FFD700, 9px 2px 0 1px #FFD700, 10px 2px 0 1px #FFD700, 6px 3px 0 1px #FFD700, 7px 3px 0 1px #FFD700, 8px 3px 0 1px #FFD700, 9px 3px 0 1px #FFD700, 4px 4px 0 1px #0000FF, 5px 4px 0 1px #0000FF, 6px 4px 0 1px #0000FF, 7px 4px 0 1px #0000FF, 8px 4px 0 1px #0000FF, 9px 4px 0 1px #0000FF, 10px 4px 0 1px #0000FF, 11px 4px 0 1px #0000FF, 5px 5px 0 1px #FFE4B5, 6px 5px 0 1px #FFE4B5, 7px 5px 0 1px #FFE4B5, 8px 5px 0 1px #FFE4B5, 9px 5px 0 1px #FFE4B5, 10px 5px 0 1px #FFE4B5, 5px 6px 0 1px #FFE4B5, 6px 6px 0 1px #FFE4B5, 7px 6px 0 1px #000, 8px 6px 0 1px #000, 9px 6px 0 1px #FFE4B5, 10px 6px 0 1px #FFE4B5, 5px 7px 0 1px #FFE4B5, 6px 7px 0 1px #FFE4B5, 7px 7px 0 1px #FFE4B5, 8px 7px 0 1px #FFE4B5, 9px 7px 0 1px #FFE4B5, 10px 7px 0 1px #FFE4B5, 5px 8px 0 1px #FFA500, 6px 8px 0 1px #FFA500, 7px 8px 0 1px #FFA500, 8px 8px 0 1px #FFA500, 9px 8px 0 1px #FFA500, 10px 8px 0 1px #FFA500, 5px 9px 0 1px #FFA500, 6px 9px 0 1px #FFA500, 7px 9px 0 1px #FFA500, 8px 9px 0 1px #FFA500, 9px 9px 0 1px #FFA500, 10px 9px 0 1px #FFA500, 5px 10px 0 1px #FFA500, 6px 10px 0 1px #FFA500, 7px 10px 0 1px #FFA500, 8px 10px 0 1px #FFA500, 9px 10px 0 1px #FFA500, 10px 10px 0 1px #FFA500;
         }
@@ -201,13 +207,11 @@
             font-size: 2.5rem;
             margin-bottom: 2rem;
             color: #fff;
-            text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
-        /* Panel Cerita */
         .story-container {
             width: 100%;
             max-width: 900px;
@@ -223,7 +227,6 @@
             animation: slideUp 0.5s ease-out;
         }
 
-        /* Tombol Pilihan (Choices) */
         .choices-container {
             display: flex;
             flex-direction: column;
@@ -261,7 +264,6 @@
             background: rgba(163, 133, 255, 0.1);
             border-color: var(--primary);
             transform: translateX(10px);
-            box-shadow: 0 5px 15px rgba(163, 133, 255, 0.1);
         }
 
         .choice-btn:hover::after {
@@ -311,10 +313,8 @@
             animation: fadeIn 0.3s;
         }
 
-        /* Tombol Coba Lagi */
         .retry-btn {
             padding: 1rem 2.5rem;
-            font-size: 1rem;
             background: linear-gradient(135deg, #A385FF, #FF6B9D);
             border: none;
             border-radius: 12px;
@@ -379,7 +379,7 @@
             transform: translateY(-3px);
         }
 
-        /* === NAVIGASI KEMBALI KE HUB === */
+        /* === NAVIGASI KEMBALI === */
         .back-to-hub {
             position: absolute;
             top: 2rem;
@@ -398,7 +398,6 @@
             color: #fff;
         }
 
-        /* === ANIMATIONS === */
         @keyframes spin {
             100% {
                 transform: rotate(360deg);
@@ -440,16 +439,12 @@
 </head>
 
 <body>
-    <!-- Tombol Kembali ke Hub Utama -->
-    <a href="index.html" class="back-to-hub">← Kembali ke Hub</a>
+    <a href="index.php" class="back-to-hub">← Kembali ke Hub</a>
 
-    <!-- Character Selection Screen -->
     <div id="character-select-screen" class="screen">
         <h1 class="page-title">Pilih Karaktermu</h1>
         <p class="page-subtitle">Pilih avatar yang akan menjadi penentu takdir dunia anime ini.</p>
-
         <div class="character-grid">
-            <!-- Character 1: Naruto Uzumaki -->
             <div class="character-card" data-character-index="0">
                 <div class="icon-wrapper">
                     <div class="pixel-sprite naruto-sprite"></div>
@@ -458,8 +453,6 @@
                 <p class="character-lore">Ninja muda dari desa Konoha yang bercita-cita menjadi Hokage dan memiliki
                     kuasa rubah ekor sembilan.</p>
             </div>
-
-            <!-- Character 2: Monkey D. Luffy -->
             <div class="character-card" data-character-index="1">
                 <div class="icon-wrapper">
                     <div class="pixel-sprite luffy-sprite"></div>
@@ -468,8 +461,6 @@
                 <p class="character-lore">Kapten bajak laut topi jerami yang memiliki tubuh karet-karet dan bercita-cita
                     menjadi Raja Bajak Laut.</p>
             </div>
-
-            <!-- Character 3: Tanjiro Kamado -->
             <div class="character-card" data-character-index="2">
                 <div class="icon-wrapper">
                     <div class="pixel-sprite tanjiro-sprite"></div>
@@ -478,8 +469,6 @@
                 <p class="character-lore">Pembasmi iblis yang berusaha mengubah adiknya Nezuko kembali menjadi manusia
                     setelah keluarganya dibantai iblis.</p>
             </div>
-
-            <!-- Character 4: Eren Yeager -->
             <div class="character-card" data-character-index="3">
                 <div class="icon-wrapper">
                     <div class="pixel-sprite eren-sprite"></div>
@@ -488,8 +477,6 @@
                 <p class="character-lore">Prajurit dengan kemampuan berubah menjadi Titan yang bertekad memusnahkan
                     semua Titan agar umat manusia bebas.</p>
             </div>
-
-            <!-- Character 5: Satoru Gojo -->
             <div class="character-card" data-character-index="4">
                 <div class="icon-wrapper">
                     <div class="pixel-sprite gojo-sprite"></div>
@@ -498,8 +485,6 @@
                 <p class="character-lore">Ahli sihir terkuat di dunia yang mengajar di sekolah jujutsu tinggi dan
                     memiliki mata enam batas tak terbatas.</p>
             </div>
-
-            <!-- Character 6: Izuku Midoriya -->
             <div class="character-card" data-character-index="5">
                 <div class="icon-wrapper">
                     <div class="pixel-sprite izuku-sprite"></div>
@@ -508,8 +493,6 @@
                 <p class="character-lore">Siswa sekolah pahlawan yang mewarisi kekuatan One For All dari pahlawan nomor
                     satu All Might.</p>
             </div>
-
-            <!-- Character 7: Edward Elric -->
             <div class="character-card" data-character-index="6">
                 <div class="icon-wrapper">
                     <div class="pixel-sprite edward-sprite"></div>
@@ -518,8 +501,6 @@
                 <p class="character-lore">Alkemis negara yang mencari batu bertuah untuk mengembalikan tubuh adiknya
                     Alphonse yang hilang akibat alkimi terlarang.</p>
             </div>
-
-            <!-- Character 8: Denji -->
             <div class="character-card" data-character-index="7">
                 <div class="icon-wrapper">
                     <div class="pixel-sprite denji-sprite"></div>
@@ -531,42 +512,84 @@
         </div>
     </div>
 
-    <!-- Story Screen -->
     <div id="story-screen" class="screen hidden">
         <h2 class="story-header" id="story-character-name"></h2>
         <div class="story-container hidden" id="story-text"></div>
         <div class="loading-container hidden" id="loading-container">
-            <div class="pixel-spinner"></div>
-            <span class="loading-text">AI sedang merajut cerita...</span>
+            <div class="pixel-spinner"></div><span class="loading-text">AI sedang merajut cerita...</span>
         </div>
         <div class="choices-container hidden" id="choices-container"></div>
         <div class="story-error hidden" id="story-error"></div>
         <button class="retry-btn hidden" id="retry-btn">Coba Lagi</button>
     </div>
 
-    <!-- Death Screen -->
     <div id="death-screen" class="screen hidden">
         <h1 class="death-title">KARAKTER MATI.</h1>
         <div class="death-story" id="death-story-text"></div>
         <div class="death-buttons">
             <button class="death-btn" id="select-other-character-btn">Pilih Karakter Lain</button>
             <button class="death-btn" id="replay-btn"
-                style="background: rgba(255, 77, 109, 0.2); border-color: var(--danger);">Main Lagi (Karakter
-                Sama)</button>
+                style="background: rgba(255, 77, 109, 0.2); border-color: var(--danger);">Mulai Dari Awal</button>
         </div>
     </div>
 
     <script>
-        // === SEMUA LOGIKA JAVASCRIPT ASLI MILIKMU DITAHAN DI SINI, TANPA PERUBAHAN ===
-        const characters = [
-            { id: 0, name: 'Naruto Uzumaki', source: 'Naruto', lore: 'Ninja muda dari desa Konoha yang bercita-cita menjadi Hokage dan memiliki kuasa rubah ekor sembilan.', traits: ['Ninjutsu', 'Kurama Chakra', 'Tekad Kuat'] },
-            { id: 1, name: 'Monkey D. Luffy', source: 'One Piece', lore: 'Kapten bajak laut topi jerami yang memiliki tubuh karet-karet dan bercita-cita menjadi Raja Bajak Laut.', traits: ['Gear Transformations', 'Haki', 'Kekuatan Fisik Super'] },
-            { id: 2, name: 'Tanjiro Kamado', source: 'Demon Slayer', lore: 'Pembasmi iblis yang berusaha mengubah adiknya Nezuko kembali menjadi manusia setelah keluarganya dibantai iblis.', traits: ['Breath of Water', 'Indra Hanafuda', 'Penciuman Tajam'] },
-            { id: 3, name: 'Eren Yeager', source: 'Attack on Titan', lore: 'Prajurit dengan kemampuan berubah menjadi Titan yang bertekad memusnahkan semua Titan agar umat manusia bebas.', traits: ['Titan Shifting', 'Pengingat Masa Depan', 'Tekad Militan'] },
-            { id: 4, name: 'Satoru Gojo', source: 'Jujutsu Kaisen', lore: 'Ahli sihir terkuat di dunia yang mengajar di sekolah jujutsu tinggi dan memiliki mata enam batas tak terbatas.', traits: ['Limitless', 'Six Eyes', 'Domain Expansion'] },
-            { id: 5, name: 'Izuku Midoriya', source: 'My Hero Academia', lore: 'Siswa sekolah pahlawan yang mewarisi kekuatan One For All dari pahlawan nomor satu All Might.', traits: ['One For All', 'Full Cowl', 'Analisis Taktis'] },
-            { id: 6, name: 'Edward Elric', source: 'Fullmetal Alchemist', lore: 'Alkemis negara yang mencari batu bertuah untuk mengembalikan tubuh adiknya Alphonse yang hilang akibat alkimi terlarang.', traits: ['Alchemy', 'Metal Arm', 'Pengetahuan Alkemi'] },
-            { id: 7, name: 'Denji', source: 'Chainsaw Man', lore: 'Pemuda miskin yang menjadi iblis gergaji mesin setelah bersatu dengan iblis gergaji untuk melunasi hutang ayahnya.', traits: ['Chainsaw Transformation', 'Regeneration', 'Insting Bertahan Hidup'] }
+        const characters = [{
+                id: 0,
+                name: 'Naruto Uzumaki',
+                source: 'Naruto',
+                lore: 'Ninja muda dari desa Konoha yang bercita-cita menjadi Hokage dan memiliki kuasa rubah ekor sembilan.',
+                traits: ['Ninjutsu', 'Kurama Chakra', 'Tekad Kuat']
+            },
+            {
+                id: 1,
+                name: 'Monkey D. Luffy',
+                source: 'One Piece',
+                lore: 'Kapten bajak laut topi jerami yang memiliki tubuh karet-karet dan bercita-cita menjadi Raja Bajak Laut.',
+                traits: ['Gear Transformations', 'Haki', 'Kekuatan Fisik Super']
+            },
+            {
+                id: 2,
+                name: 'Tanjiro Kamado',
+                source: 'Demon Slayer',
+                lore: 'Pembasmi iblis yang berusaha mengubah adiknya Nezuko kembali menjadi manusia setelah keluarganya dibantai iblis.',
+                traits: ['Breath of Water', 'Indra Hanafuda', 'Penciuman Tajam']
+            },
+            {
+                id: 3,
+                name: 'Eren Yeager',
+                source: 'Attack on Titan',
+                lore: 'Prajurit dengan kemampuan berubah menjadi Titan yang bertekad memusnahkan semua Titan agar umat manusia bebas.',
+                traits: ['Titan Shifting', 'Pengingat Masa Depan', 'Tekad Militan']
+            },
+            {
+                id: 4,
+                name: 'Satoru Gojo',
+                source: 'Jujutsu Kaisen',
+                lore: 'Ahli sihir terkuat di dunia yang mengajar di sekolah jujutsu tinggi dan memiliki mata enam batas tak terbatas.',
+                traits: ['Limitless', 'Six Eyes', 'Domain Expansion']
+            },
+            {
+                id: 5,
+                name: 'Izuku Midoriya',
+                source: 'My Hero Academia',
+                lore: 'Siswa sekolah pahlawan yang mewarisi kekuatan One For All dari pahlawan nomor satu All Might.',
+                traits: ['One For All', 'Full Cowl', 'Analisis Taktis']
+            },
+            {
+                id: 6,
+                name: 'Edward Elric',
+                source: 'Fullmetal Alchemist',
+                lore: 'Alkemis negara yang mencari batu bertuah untuk mengembalikan tubuh adiknya Alphonse yang hilang akibat alkimi terlarang.',
+                traits: ['Alchemy', 'Metal Arm', 'Pengetahuan Alkemi']
+            },
+            {
+                id: 7,
+                name: 'Denji',
+                source: 'Chainsaw Man',
+                lore: 'Pemuda miskin yang menjadi iblis gergaji mesin setelah bersatu dengan iblis gergaji untuk melunasi hutang ayahnya.',
+                traits: ['Chainsaw Transformation', 'Regeneration', 'Insting Bertahan Hidup']
+            }
         ];
 
         const characterSelectScreen = document.getElementById('character-select-screen');
@@ -576,36 +599,35 @@
 
         let currentCharacter = null;
         let storyHistory = [];
+        let isContinueSession = false;
 
         characterCards.forEach(card => {
             card.addEventListener('click', () => {
                 const index = parseInt(card.dataset.characterIndex);
                 currentCharacter = characters[index];
-                storyHistory = [];
 
                 characterSelectScreen.classList.add('hidden');
                 storyScreen.classList.remove('hidden');
-
-                if (typeof loadInitialStory === 'function') {
-                    loadInitialStory();
-                }
+                loadInitialStory();
             });
         });
 
         const API_PROXY = 'api-proxy.php';
         const HY3_MODEL = 'nvidia/nemotron-3-super-120b-a12b:free';
-        const HY3_SYSTEM_PROMPT = `Anda adalah generator cerita untuk game RPG petualangan anime 2D berbahasa Indonesia. Anda HARUS mengikuti aturan berikut dengan ketat:
-1. SELALU kembalikan objek JSON yang valid TANPA teks tambahan, markdown, atau code fences di luar JSON.
-2. Struktur JSON harus persis sebagai berikut:
+
+        // SISTEM PROMPT HARDCORE (Menghancurkan Plot Armor)
+        const HY3_SYSTEM_PROMPT = `Anda adalah Game Master (GM) RPG survival hardcore yang logis, brutal, dan tidak kenal ampun.
+ATURAN MUTLAK:
+1. HILANGKAN PLOT ARMOR. Karakter TIDAK kebal. Setiap tindakan bodoh, ceroboh, atau berisiko tinggi saat terluka HARUS berakibat fatal.
+2. Lacak status fisik (HP/Stamina/Luka) secara tersembunyi. Jika terluka parah dan tidak diobati, karakter akan mati.
+3. Jika karakter mengambil keputusan yang menyebabkan kematian, ubah "is_dead" menjadi true, dan ceritakan detik-detik kematiannya secara dramatis. JANGAN BERIKAN KEAJAIBAN PENYELAMATAN.
+4. SELALU kembalikan format JSON murni TANPA markdown/backticks di awal atau akhir JSON.
+Struktur JSON:
 {
-  "story_segment": "string (bahasa Indonesia, 1-3 paragraf, maksimal 200 kata, sesuai lore karakter dan pilihan sebelumnya)",
-  "choices": ["string (bahasa Indonesia)", "string (bahasa Indonesia)", ...], 
+  "story_segment": "string (bahasa Indonesia, 1-3 paragraf, sangat detail, deskriptif dan berbobot)",
+  "choices": ["pilihan aman/logis", "pilihan berisiko tinggi", "pilihan bertahan/pengecut"], 
   "is_dead": boolean 
-}
-3. Pilihan pemain HARUS memiliki dampak persisten pada cerita di masa depan.
-4. Karakter memiliki 3+ jalur kematian yang logis sesuai lore anime asalnya.
-5. Semua teks dalam respons HARUS berbahasa Indonesia.
-6. Jangan menambahkan teks apa pun di luar objek JSON.`;
+}`;
 
         const storyCharacterName = document.getElementById('story-character-name');
         const storyText = document.getElementById('story-text');
@@ -614,41 +636,76 @@
         const storyError = document.getElementById('story-error');
         const retryBtn = document.getElementById('retry-btn');
         const deathStoryText = document.getElementById('death-story-text');
-        const selectOtherCharacterBtn = document.getElementById('select-other-character-btn');
-        const replayBtn = document.getElementById('replay-btn');
 
-        function addStorySegmentToHistory(segment) { storyHistory.push({ type: 'story', content: segment }); }
-        function addChoiceToHistory(choice) { storyHistory.push({ type: 'choice', content: choice }); }
-
-        function getFormattedStoryHistory() {
-            if (storyHistory.length === 0) return 'Tidak ada riwayat cerita sebelumnya.';
-            return storyHistory.map(entry => {
-                if (entry.type === 'story') return `Segmen Cerita: ${entry.content}`;
-                return `Pilihan Pemain: ${entry.content}`;
-            }).join('\n');
+        // Fungsi Auto-Save ke Database MySQL
+        async function saveProgressToDatabase() {
+            try {
+                await fetch('save_story.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        character_name: currentCharacter.name,
+                        chat_history: storyHistory
+                    })
+                });
+            } catch (error) {
+                console.error("Gagal melakukan auto-save", error);
+            }
         }
 
-        function buildUserPrompt() {
-            return `Detail Karakter:
+        // Fungsi Memuat Data dari Database MySQL
+        async function loadInitialStory() {
+            storyHistory = [];
+            isContinueSession = false;
+            hideStoryContent();
+            hideStoryError();
+            showLoading();
+
+            const charSpriteClass = `${currentCharacter.name.split(' ')[0].toLowerCase()}-sprite`;
+            storyCharacterName.innerHTML =
+                `<div style="width: 30px; height: 30px; margin-right:15px;"><div class="pixel-sprite ${charSpriteClass}" style="transform: scale(3) translate(0,0);"></div></div> ${currentCharacter.name}`;
+
+            try {
+                const response = await fetch(`load_story.php?character=${encodeURIComponent(currentCharacter.name)}`);
+                const result = await response.json();
+
+                if (result.status === 'success' && result.data) {
+                    // Jika ada save data lama
+                    storyHistory = typeof result.data === 'string' ? JSON.parse(result.data) : result.data;
+                    isContinueSession = true;
+                    fetchStorySegment(true); // Lanjutkan cerita
+                } else {
+                    // Jika belum pernah main
+                    fetchStorySegment(false);
+                }
+            } catch (error) {
+                console.error("Gagal memuat save data", error);
+                fetchStorySegment(false); // Fallback ke game baru
+            }
+        }
+
+        function buildUserPrompt(isContinue) {
+            let promptBase = `Detail Karakter:
 Nama: ${currentCharacter.name}
 Anime Asal: ${currentCharacter.source}
 Lore: ${currentCharacter.lore}
-Sifat: ${currentCharacter.traits.join(', ')}
+Sifat: ${currentCharacter.traits.join(', ')}\n\n`;
 
-Riwayat Cerita Sebelumnya:
-${getFormattedStoryHistory()}
+            if (isContinue) {
+                promptBase +=
+                    `Ini adalah sesi lanjutan dari Save Data pemain. Berikut adalah riwayat perjalanan sebelumnya:\n`;
+            } else {
+                promptBase += `Ini adalah awal permainan baru. Berikut riwayatnya (jika ada):\n`;
+            }
 
-Silakan hasilkan segmen cerita berikutnya sesuai aturan yang diberikan.`;
-        }
+            let historyText = storyHistory.length === 0 ? 'Belum ada riwayat.' : storyHistory.map(entry => {
+                return entry.type === 'story' ? `GM: ${entry.content}` : `Pemain Memilih: ${entry.content}`;
+            }).join('\n\n');
 
-        function loadInitialStory() {
-            storyHistory = [];
-
-            // Tambahkan ikon piksel karakter di sebelah nama
-            const charSpriteClass = `${currentCharacter.name.split(' ')[0].toLowerCase()}-sprite`;
-            storyCharacterName.innerHTML = `<div style="width: 30px; height: 30px; margin-right:15px;"><div class="pixel-sprite ${charSpriteClass}" style="transform: scale(3) translate(0,0);"></div></div> ${currentCharacter.name}`;
-
-            fetchStorySegment();
+            return promptBase + historyText +
+                `\n\nSilakan hasilkan segmen cerita (atau lanjutkan dari cerita terakhir) beserta konsekuensinya sesuai aturan JSON yang diberikan.`;
         }
 
         function renderChoices(choices) {
@@ -658,8 +715,11 @@ Silakan hasilkan segmen cerita berikutnya sesuai aturan yang diberikan.`;
                 btn.className = 'choice-btn';
                 btn.textContent = choiceText;
                 btn.addEventListener('click', () => {
-                    addChoiceToHistory(choiceText);
-                    fetchStorySegment();
+                    storyHistory.push({
+                        type: 'choice',
+                        content: choiceText
+                    });
+                    fetchStorySegment(false);
                 });
                 choicesContainer.appendChild(btn);
             });
@@ -670,6 +730,7 @@ Silakan hasilkan segmen cerita berikutnya sesuai aturan yang diberikan.`;
             storyScreen.classList.add('hidden');
             deathScreen.classList.remove('hidden');
             deathStoryText.textContent = deathSegment;
+            // Jika mati, biarkan data tertimpa atau bisa diriset manual di database jika mau
         }
 
         function showLoading() {
@@ -687,116 +748,94 @@ Silakan hasilkan segmen cerita berikutnya sesuai aturan yang diberikan.`;
             choicesContainer.classList.add('hidden');
         }
 
-        selectOtherCharacterBtn.addEventListener('click', () => {
+        document.getElementById('select-other-character-btn').addEventListener('click', () => {
             deathScreen.classList.add('hidden');
             characterSelectScreen.classList.remove('hidden');
             currentCharacter = null;
-            storyHistory = [];
         });
 
-        replayBtn.addEventListener('click', () => {
+        document.getElementById('replay-btn').addEventListener('click', () => {
             deathScreen.classList.add('hidden');
             storyScreen.classList.remove('hidden');
-            loadInitialStory();
+            storyHistory = []; // Hapus memori lama untuk mulai ulang bersih
+            saveProgressToDatabase(); // Timpa database dengan data kosong
+            fetchStorySegment(false);
         });
 
-        const FETCH_TIMEOUT = 240000;
-        let retryCount = 0;
-        const MAX_RETRIES = 2;
-
         function extractJsonFromResponse(text) {
-            try { return JSON.parse(text); }
-            catch (e) {
+            try {
+                return JSON.parse(text);
+            } catch (e) {
                 const jsonMatch = text.match(/\{[\s\S]*\}/);
                 if (jsonMatch) {
-                    try { return JSON.parse(jsonMatch[0]); } catch (e2) { throw new Error('INVALID_JSON'); }
+                    try {
+                        return JSON.parse(jsonMatch[0]);
+                    } catch (e2) {
+                        throw new Error('INVALID_JSON');
+                    }
                 }
                 throw new Error('INVALID_JSON');
             }
         }
 
-        async function fetchWithTimeout(url, options, timeout = FETCH_TIMEOUT) {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), timeout);
-            try {
-                const response = await fetch(url, { ...options, signal: controller.signal });
-                clearTimeout(timeoutId);
-                return response;
-            } catch (error) {
-                clearTimeout(timeoutId);
-                if (error.name === 'AbortError') throw new Error('TIMEOUT');
-                throw new Error('NETWORK_ERROR');
-            }
-        }
-
-        async function fetchStorySegment() {
+        async function fetchStorySegment(isContinue = false) {
             showLoading();
             hideStoryContent();
             hideStoryError();
-            retryBtn.classList.add('hidden');
 
             try {
-                const userPrompt = buildUserPrompt();
-                const response = await fetchWithTimeout(API_PROXY, {
+                const userPrompt = buildUserPrompt(isContinue);
+                const response = await fetch(API_PROXY, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify({
                         model: HY3_MODEL,
-                        messages: [
-                            { role: 'system', content: HY3_SYSTEM_PROMPT },
-                            { role: 'user', content: userPrompt }
+                        messages: [{
+                                role: 'system',
+                                content: HY3_SYSTEM_PROMPT
+                            },
+                            {
+                                role: 'user',
+                                content: userPrompt
+                            }
                         ],
                         temperature: 0.7,
-                        max_tokens: 50000
+                        max_tokens: 2000
                     })
                 });
 
-                if (!response.ok) {
-                    if (response.status === 401) throw new Error('UNAUTHORIZED');
-                    if (response.status === 429) throw new Error('RATE_LIMIT');
-                    throw new Error('API_ERROR');
-                }
+                if (!response.ok) throw new Error('API_ERROR');
 
                 const data = await response.json();
-                const message = data.choices[0].message;
-                const hy3Response = (message.content || message.reasoning || '').trim();
+                const hy3Response = (data.choices[0].message.content || '').trim();
 
-                let parsedResponse;
-                try { parsedResponse = extractJsonFromResponse(hy3Response); }
-                catch (e) { throw new Error('INVALID_JSON'); }
+                const parsedResponse = extractJsonFromResponse(hy3Response);
 
-                if (!parsedResponse.story_segment || typeof parsedResponse.story_segment !== 'string') throw new Error('INVALID_RESPONSE');
-                if (!Array.isArray(parsedResponse.choices) || parsedResponse.choices.length < 2 || parsedResponse.choices.length > 5) throw new Error('INVALID_RESPONSE');
-                if (typeof parsedResponse.is_dead !== 'boolean') throw new Error('INVALID_RESPONSE');
+                storyHistory.push({
+                    type: 'story',
+                    content: parsedResponse.story_segment
+                });
 
-                retryCount = 0;
-                addStorySegmentToHistory(parsedResponse.story_segment);
+                // SIMPAN PROGRES SETELAH AI MENJAWAB
+                saveProgressToDatabase();
 
                 if (parsedResponse.is_dead) {
                     showDeathScreen(parsedResponse.story_segment);
                 } else {
-                    renderStory(parsedResponse.story_segment);
+                    storyText.textContent = parsedResponse.story_segment;
+                    storyText.classList.remove('hidden');
                     renderChoices(parsedResponse.choices);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
                 }
 
             } catch (error) {
-                let errorMessage = 'Gagal memuat cerita. Silakan coba lagi.';
-                let showRetry = false;
-
-                switch (error.message) {
-                    case 'RATE_LIMIT': errorMessage = 'Terlalu banyak permintaan. Silakan tunggu 1 menit sebelum mencoba lagi.'; showRetry = true; break;
-                    case 'TIMEOUT': errorMessage = 'Permintaan waktu habis. Periksa koneksi internet Anda.'; showRetry = true; break;
-                    case 'NETWORK_ERROR': errorMessage = 'Tidak ada koneksi internet. Periksa jaringan Anda.'; showRetry = true; break;
-                    case 'INVALID_JSON':
-                    case 'INVALID_RESPONSE':
-                        errorMessage = 'Gagal memuat cerita. Silakan coba lagi.';
-                        if (retryCount < MAX_RETRIES) { retryCount++; showRetry = true; }
-                        break;
-                    default: errorMessage = 'Gagal memuat cerita. Periksa koneksi internet Anda.'; showRetry = true;
-                }
-                showStoryError(errorMessage);
-                if (showRetry) retryBtn.classList.remove('hidden');
+                showStoryError("Gagal merajut takdir. Server AI sedang kelelahan. Silakan coba lagi.");
+                retryBtn.classList.remove('hidden');
             } finally {
                 hideLoading();
             }
@@ -811,13 +850,7 @@ Silakan hasilkan segmen cerita berikutnya sesuai aturan yang diberikan.`;
 
         function hideStoryError() {
             storyError.classList.add('hidden');
-            storyError.textContent = '';
             retryBtn.classList.add('hidden');
-        }
-
-        function renderStory(segment) {
-            storyText.textContent = segment;
-            storyText.classList.remove('hidden');
         }
     </script>
 </body>
